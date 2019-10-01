@@ -16,7 +16,7 @@ repositories {
 }
 
 ext {
-    okhttp3 = "3.12.5"
+    okhttp3 = "3.14.4"
     retrofit = "2.6.2"
     threetenbp = "1.4.0"
 }
