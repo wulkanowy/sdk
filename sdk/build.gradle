@@ -6,6 +6,7 @@ plugins {
 dependencies {
     implementation project(":sdk-mobile")
     implementation project(":sdk-scrapper")
+    implementation project(":sdk-extensions")
 
     testCompile files(this.project(':sdk-mobile').sourceSets.test.output)
     testCompile files(this.project(':sdk-mobile').sourceSets.test.runtimeClasspath)

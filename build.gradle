@@ -128,6 +128,7 @@ dependencies {
     compile project(":sdk")
     compile project(":sdk-mobile")
     compile project(":sdk-scrapper")
+    compile project(":sdk-extensions")
 
     compile "com.squareup.okhttp3:okhttp:$okhttp3"
 }

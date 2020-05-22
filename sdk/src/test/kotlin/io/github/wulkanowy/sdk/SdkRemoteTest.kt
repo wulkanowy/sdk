@@ -304,4 +304,25 @@ class SdkRemoteTest {
         val isDeleted = sdk.deleteMessages(listOf(1 to 1, 2 to 2)).blockingGet()
         assertEquals(true, isDeleted)
     }
+
+    @Test
+    fun getSchoolExtensionIntegrations() {
+        val sdk = Sdk().apply {
+            symbol = "powiatwulkanowy"
+            schoolSymbol = "0123456"
+        }
+
+        val integrations = sdk.getSchoolExtensionsIntegrations().blockingGet()
+        assertEquals("lucky_number", integrations.integrations[0])
+    }
+
+    @Test
+    fun getLuckyNumber() {
+        val sdk = Sdk().apply {
+            extensionsServerBaseUrl = "https://school-extensions-server.herokuapp.com/powiatwulkanowy/0123456/"
+        }
+
+        val luckyNumber = sdk.getLuckyNumberFromExtensions().blockingGet()
+        assertEquals("21", luckyNumber.number)
+    }
 }

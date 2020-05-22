@@ -2,6 +2,8 @@ package io.github.wulkanowy.sdk
 
 import io.github.wulkanowy.sdk.exception.FeatureNotAvailableException
 import io.github.wulkanowy.sdk.exception.ScrapperExceptionTransformer
+import io.github.wulkanowy.sdk.extensions.Extensions
+import io.github.wulkanowy.sdk.extensions.pojo.ServerInfo
 import io.github.wulkanowy.sdk.mapper.*
 import io.github.wulkanowy.sdk.mobile.Mobile
 import io.github.wulkanowy.sdk.pojo.*
@@ -36,6 +38,8 @@ class Sdk {
     private val mobile = Mobile()
 
     private val scrapper = Scrapper()
+
+    private val extensions = Extensions()
 
     var mode = Mode.HYBRID
 
@@ -143,6 +147,12 @@ class Sdk {
         set(value) {
             field = value
             scrapper.buildTag = value
+        }
+
+    var extensionsServerBaseUrl: String = ""
+        set(value) {
+            field = value
+            extensions.schoolServerBaseUrl = value
         }
 
     private val interceptors: MutableList<Pair<Interceptor, Boolean>> = mutableListOf()
@@ -569,4 +579,14 @@ class Sdk {
             Mode.API -> throw FeatureNotAvailableException("Last student lesson is not available in API mode")
         }
     }
+
+    fun getSchoolExtensionsIntegrations(): Single<ServerInfo> {
+        if (symbol.isBlank() || schoolSymbol.isBlank()) return Single.error(Exception("symbol and/or school symbol are not initialized"))
+
+        return extensions.searchServerBySchoolId("${symbol}_$schoolSymbol").flatMap {
+            extensions.getServerInfo(it.single().url)
+        }
+    }
+
+    fun getLuckyNumberFromExtensions() = extensions.getLuckyNumber()
 }
