@@ -72,7 +72,8 @@ subprojects {
         disabledRules = [
             "no-wildcard-imports",
             "import-ordering",
-            "max-line-length"
+            "max-line-length",
+            "indent"
         ]
     }
 
