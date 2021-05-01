@@ -81,9 +81,12 @@ subprojects {
 
     compileKotlin {
         kotlinOptions {
-            jvmTarget = "1.6"
+            jvmTarget = "1.8"
             javaParameters = true
         }
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
     }
 
     dependencies {
