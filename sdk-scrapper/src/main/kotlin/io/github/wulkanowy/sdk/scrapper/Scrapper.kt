@@ -484,12 +484,12 @@ class Scrapper {
 
     suspend fun unregisterDevice(id: Int): Boolean = student.unregisterDevice(id)
 
-    suspend fun getTeachers(): List<Teacher> = when(isEduOne) {
+    suspend fun getTeachers(): List<Teacher> = when (isEduOne) {
         true -> studentPlus.getTeachers()
         else -> student.getTeachers()
     }
 
-    suspend fun getSchool(): School = when(isEduOne) {
+    suspend fun getSchool(): School = when (isEduOne) {
         true -> studentPlus.getSchool()
         else -> student.getSchool()
     }

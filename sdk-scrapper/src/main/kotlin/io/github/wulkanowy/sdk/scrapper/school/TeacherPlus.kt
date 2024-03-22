@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TeacherPlus(
+internal data class TeacherPlus(
     @SerialName("przedmiot") val subject: String,
     @SerialName("imie") val firstName: String,
     @SerialName("nazwisko") val lastName: String,
@@ -13,6 +13,6 @@ data class TeacherPlus(
 )
 
 @Serializable
-data class TeacherPlusResponse(
+internal data class TeacherPlusResponse(
     @SerialName("nauczyciele") val teachers: List<TeacherPlus>,
 )

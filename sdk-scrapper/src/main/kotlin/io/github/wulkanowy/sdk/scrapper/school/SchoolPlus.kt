@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SchoolPlus(
+internal data class SchoolPlus(
     @SerialName("nazwa") val name: String,
     @SerialName("imienia") val patron: String,
     @SerialName("numer") val number: String,
