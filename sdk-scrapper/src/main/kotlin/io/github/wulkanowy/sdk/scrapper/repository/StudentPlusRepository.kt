@@ -405,9 +405,9 @@ internal class StudentPlusRepository(
 
     suspend fun getTeachers(): List<Teacher> = api.getTeachers().teachers.map {
         Teacher(
-            name = "${it.firstName} ${it.lastName}".ifBlank { "" },
+            name = "${it.firstName} ${it.lastName}".trim(),
             subject = it.subject,
-        ).also { teacher -> teacher.short = it.firstName.take(1) + it.lastName.take(1) }
+        )
     }
 
     suspend fun getSchool(): School = api.getSchool().let {

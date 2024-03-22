@@ -19,7 +19,7 @@ class TeachersPlusTest : BaseLocalTest() {
     fun getTeacher_std() {
         with(teachers[3]) {
             Assert.assertEquals("Michał Bodnar", name)
-            Assert.assertEquals("MB", short)
+            Assert.assertEquals("", short)
             Assert.assertEquals("Geografia", subject)
         }
     }
@@ -37,7 +37,7 @@ class TeachersPlusTest : BaseLocalTest() {
     fun getTeacher_emptySubject() {
         with(teachers[0]) {
             Assert.assertEquals("Joanna Budna", name)
-            Assert.assertEquals("JB", short)
+            Assert.assertEquals("", short)
             Assert.assertEquals("", subject)
         }
     }
