@@ -39,7 +39,7 @@ import kotlin.concurrent.withLock
 
 private val HOSTS = arrayOf("uonetplus-wiadomosciplus", "uonetplus-uczenplus", "uonetplus-uczen")
 
-private data class ModuleHeaders(
+internal data class ModuleHeaders(
     val token: String,
     val appGuid: String,
     val appVersion: String,
@@ -47,6 +47,7 @@ private data class ModuleHeaders(
 
 internal class AutoLoginInterceptor(
     private val loginType: LoginType,
+    private val headersByHost: MutableMap<String, ModuleHeaders> = mutableMapOf(),
     private val loginLock: ReentrantLock = ReentrantLock(true),
     private val cookieJarCabinet: CookieJarCabinet,
     private val emptyCookieJarIntercept: Boolean = false,
@@ -59,7 +60,6 @@ internal class AutoLoginInterceptor(
         private val logger = LoggerFactory.getLogger(this::class.java)
     }
 
-    private val headersByHost: MutableMap<String, ModuleHeaders> = mutableMapOf()
     private var lastError: Throwable? = null
 
     override fun intercept(chain: Interceptor.Chain): Response {

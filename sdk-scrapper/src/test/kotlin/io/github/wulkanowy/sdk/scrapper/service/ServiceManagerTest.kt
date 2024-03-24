@@ -43,6 +43,7 @@ class ServiceManagerTest : BaseLocalTest() {
             buildTag = "",
             userAgentTemplate = "",
             loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
         manager.setInterceptor({ throw ScrapperException("Test") })
 
@@ -78,6 +79,7 @@ class ServiceManagerTest : BaseLocalTest() {
             buildTag = "",
             userAgentTemplate = "",
             loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
         manager.setInterceptor(
             {
@@ -151,6 +153,7 @@ class ServiceManagerTest : BaseLocalTest() {
             buildTag = "",
             userAgentTemplate = "",
             loginLock = ReentrantLock(true),
+            headersByHost = mutableMapOf(),
         )
 
         val res = runCatching {

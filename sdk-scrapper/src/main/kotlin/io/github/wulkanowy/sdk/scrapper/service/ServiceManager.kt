@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -52,6 +53,7 @@ internal class ServiceManager(
     private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
     loginLock: ReentrantLock,
+    headersByHost: MutableMap<String, ModuleHeaders>,
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
@@ -103,6 +105,7 @@ internal class ServiceManager(
         ErrorInterceptor(cookieJarCabinet) to false,
         AutoLoginInterceptor(
             loginLock = loginLock,
+            headersByHost = headersByHost,
             loginType = loginType,
             cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
