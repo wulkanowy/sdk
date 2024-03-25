@@ -124,7 +124,7 @@ internal class LoginHelper(
                 ADFS -> {
                     when (host) {
                         "umt.tarnow.pl" -> {
-                            sendADFSMS(getNormalizedADFSLogin(email, "EDUNET"), password)
+                            sendADFSMS(normalizeADFSLogin(email, "EDUNET"), password)
                         }
 
                         "edu.gdansk.pl" -> {
@@ -132,11 +132,11 @@ internal class LoginHelper(
                         }
 
                         "eduportal.koszalin.pl" -> {
-                            sendADFSMS(getNormalizedADFSLogin(email, "EDUPORTAL"), password)
+                            sendADFSMS(normalizeADFSLogin(email, "EDUPORTAL"), password)
                         }
 
                         "eszkola.opolskie.pl" -> {
-                            sendADFSMS(getNormalizedADFSLogin(email, "EDUPORTAL"), password)
+                            sendADFSMS(normalizeADFSLogin(email, "EDUPORTAL"), password)
                         }
 
                         else -> sendADFSMS(it, password)
@@ -146,6 +146,14 @@ internal class LoginHelper(
                 ADFSLight, ADFSLightScoped, ADFSLightCufs -> sendADFSLightGeneric(it, password, loginType)
                 ADFSCards -> sendADFSCards(it, password)
             }
+        }
+    }
+
+    private fun normalizeADFSLogin(login: String, prefix: String): String {
+        return when {
+            "@" in login -> login
+            "\\" in login -> login
+            else -> "$prefix\\$login"
         }
     }
 
@@ -307,14 +315,6 @@ internal class LoginHelper(
                 ),
             ),
         )
-    }
-
-    private fun getNormalizedADFSLogin(login: String, prefix: String): String {
-        return when {
-            "@" in login -> login
-            "\\" in login -> login
-            else -> "$prefix\\$login"
-        }
     }
 
     private fun getADFSUrl(type: Scrapper.LoginType): String {

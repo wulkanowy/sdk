@@ -26,10 +26,10 @@ import io.github.wulkanowy.sdk.scrapper.grades.mapGradesList
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsPartial
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesStatisticsSemester
 import io.github.wulkanowy.sdk.scrapper.grades.mapGradesSummary
+import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.homework.Homework
 import io.github.wulkanowy.sdk.scrapper.homework.HomeworkRequest
 import io.github.wulkanowy.sdk.scrapper.homework.mapHomework
-import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.login.CertificateResponse
 import io.github.wulkanowy.sdk.scrapper.login.UrlGenerator
 import io.github.wulkanowy.sdk.scrapper.menu.Menu

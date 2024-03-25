@@ -1,11 +1,11 @@
 package io.github.wulkanowy.sdk.scrapper.repository
 
 import io.github.wulkanowy.sdk.scrapper.getScriptParam
+import io.github.wulkanowy.sdk.scrapper.handleErrors
 import io.github.wulkanowy.sdk.scrapper.home.DirectorInformation
 import io.github.wulkanowy.sdk.scrapper.home.GovernmentUnit
 import io.github.wulkanowy.sdk.scrapper.home.LastAnnouncement
 import io.github.wulkanowy.sdk.scrapper.home.LuckyNumber
-import io.github.wulkanowy.sdk.scrapper.interceptor.handleErrors
 import io.github.wulkanowy.sdk.scrapper.service.HomepageService
 import io.github.wulkanowy.sdk.scrapper.toLocalDate
 import kotlinx.coroutines.sync.Mutex
@@ -16,27 +16,14 @@ import java.time.LocalDate
 internal class HomepageRepository(private val api: HomepageService) {
 
     private val lock = Mutex()
-
     private var cachedToken: Pair<Instant, String>? = null
 
-    private suspend fun getToken(): String {
-        val token = lock.withLock {
-            val previousToken = cachedToken?.let {
-                when {
-                    Instant.now().isBefore(it.first.plusSeconds(5)) -> it.second
-                    else -> null
-                }
-            }
-            when {
-                previousToken != null -> previousToken
-                else -> {
-                    val permissions = getScriptParam("permissions", api.getStart())
-                    cachedToken = Instant.now() to permissions
-                    permissions
-                }
-            }
+    private suspend fun getToken(): String = lock.withLock {
+        cachedToken?.takeIf { (expiry) -> Instant.now().isBefore(expiry.plusSeconds(5)) }?.second ?: run {
+            val permissions = getScriptParam("permissions", api.getStart())
+            cachedToken = Instant.now() to permissions
+            permissions
         }
-        return token
     }
 
     suspend fun getDirectorInformation(): List<DirectorInformation> {

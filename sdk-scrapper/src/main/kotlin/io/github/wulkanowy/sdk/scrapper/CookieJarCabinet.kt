@@ -9,19 +9,17 @@ import java.net.URI
 internal class CookieJarCabinet {
 
     val userCookieManager = MergeCookieManager(
-        original = CookieManager().apply {
+        main = CookieManager().apply {
             setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         },
-        getCookie = { uri, headers -> additionalCookieManager?.get(uri, headers) },
-        putCookie = { uri, headers -> additionalCookieManager?.put(uri, headers) },
+        second = this::additionalCookieManager,
     )
 
     val alternativeCookieManager = MergeCookieManager(
-        original = CookieManager().apply {
+        main = CookieManager().apply {
             setCookiePolicy(CookiePolicy.ACCEPT_ALL)
         },
-        getCookie = { uri, headers -> additionalCookieManager?.get(uri, headers) },
-        putCookie = { uri, headers -> additionalCookieManager?.put(uri, headers) },
+        second = this::additionalCookieManager,
     )
 
     private var additionalCookieManager: CookieManager? = null
@@ -67,31 +65,29 @@ internal class CookieJarCabinet {
 }
 
 internal class MergeCookieManager(
-    private val original: CookieManager,
-    private val getCookie: (URI?, Map<String, List<String>>?) -> Map<String, List<String>>?,
-    private val putCookie: (URI?, Map<String, List<String>>?) -> Unit,
+    private val main: CookieManager,
+    private val second: () -> CookieManager?,
 ) : CookieManager() {
 
     override fun get(uri: URI?, requestHeaders: Map<String, List<String>>?): Map<String, List<String>> {
-        val additionalCookie = getCookie(uri, requestHeaders)
         return merge(
-            map1 = original.get(uri, requestHeaders),
-            map2 = additionalCookie.orEmpty(),
+            map1 = main.get(uri, requestHeaders),
+            map2 = second()?.get(uri, requestHeaders).orEmpty(),
         )
     }
 
     override fun put(uri: URI?, responseHeaders: Map<String, List<String>>?) {
-        original.put(uri, responseHeaders)
+        main.put(uri, responseHeaders)
         // if we add cookies to additional cookie manager we also need to clear it in some cases
         // like user change, etc
-        putCookie
+        // second()?.put(uri, responseHeaders)
     }
 
     override fun setCookiePolicy(cookiePolicy: CookiePolicy?) {
-        original.setCookiePolicy(cookiePolicy)
+        main.setCookiePolicy(cookiePolicy)
     }
 
-    override fun getCookieStore(): CookieStore = original.cookieStore
+    override fun getCookieStore(): CookieStore = main.cookieStore
 }
 
 private fun merge(map1: Map<String, List<String>>, map2: Map<String, List<String>>): Map<String, List<String>> {

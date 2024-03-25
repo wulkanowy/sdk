@@ -250,16 +250,14 @@ internal class ServiceManager(
             },
         )
         .apply {
-            interceptors.forEach {
-                if (it.first is ErrorInterceptor || it.first is AutoLoginInterceptor) {
-                    if (it.first is AutoLoginInterceptor && loginIntercept) addInterceptor(it.first)
-                    if (it.first is ErrorInterceptor && errIntercept) addInterceptor(it.first)
-                } else {
-                    when {
-                        it.second -> addNetworkInterceptor(it.first)
-                        else -> addInterceptor(it.first)
-                    }
+            interceptors.forEach { (interceptor, network) ->
+                when (interceptor) {
+                    is ErrorInterceptor -> if (errIntercept) addInterceptor(interceptor, network)
+                    is AutoLoginInterceptor -> if (loginIntercept) addInterceptor(interceptor, network)
+                    else -> addInterceptor(interceptor, network)
                 }
             }
         }
 }
+
+private fun OkHttpClient.Builder.addInterceptor(interceptor: Interceptor, network: Boolean) = if (network) addNetworkInterceptor(interceptor) else addInterceptor(interceptor)

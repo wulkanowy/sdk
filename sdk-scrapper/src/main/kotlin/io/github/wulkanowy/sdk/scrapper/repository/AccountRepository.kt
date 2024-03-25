@@ -6,7 +6,6 @@ import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSCards
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLight
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightCufs
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.ADFSLightScoped
-import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.AUTO
 import io.github.wulkanowy.sdk.scrapper.Scrapper.LoginType.STANDARD
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidCaptchaException
 import io.github.wulkanowy.sdk.scrapper.exception.InvalidEmailException
@@ -72,7 +71,7 @@ internal class AccountRepository(private val account: AccountService) {
 
     private suspend fun getPasswordResetUrl(registerBaseUrl: String, domainSuffix: String, symbol: String): Pair<Scrapper.LoginType, String> {
         val url = URL(registerBaseUrl)
-        val unlockUrl = when (url.host) {
+        return when (url.host) {
             "fakelog.cf" -> STANDARD to "https://cufs.fakelog.cf/Default/AccountManage/UnlockAccount"
             "fakelog.tk" -> STANDARD to "https://cufs.fakelog.tk/Default/AccountManage/UnlockAccount"
             "eszkola.opolskie.pl" -> ADFSCards to "https://konta.eszkola.opolskie.pl/maintenance/unlock.aspx"
@@ -80,12 +79,7 @@ internal class AccountRepository(private val account: AccountService) {
             "edu.lublin.eu" -> ADFSLightCufs to "https://logowanie.edu.lublin.eu/AccountManage/UnlockAccountRequest"
             "umt.tarnow.pl" -> ADFS to "https://konta.umt.tarnow.pl/maintenance/unlock.aspx"
             "eduportal.koszalin.pl" -> ADFS to "https://konta.eduportal.koszalin.pl/maintenance/unlock.aspx"
-            "vulcan.net.pl" -> AUTO to "" // stream hack - bellow
-            else -> throw ScrapperException("Nieznany dziennik $url")
-        }
-
-        return when (unlockUrl.first) {
-            AUTO -> {
+            "vulcan.net.pl" -> {
                 val loginType = getLoginType(UrlGenerator(url, domainSuffix, symbol, ""))
                 loginType to when (loginType) {
                     STANDARD -> "https://cufs$domainSuffix.vulcan.net.pl/$symbol/AccountManage/UnlockAccount"
@@ -93,7 +87,7 @@ internal class AccountRepository(private val account: AccountService) {
                     else -> throw ScrapperException("Nieznany dziennik $registerBaseUrl, $loginType")
                 }
             }
-            else -> unlockUrl
+            else -> throw ScrapperException("Nieznany dziennik $url")
         }
     }
 
