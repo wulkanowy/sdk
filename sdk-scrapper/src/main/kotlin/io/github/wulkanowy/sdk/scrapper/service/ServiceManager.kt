@@ -9,6 +9,7 @@ import io.github.wulkanowy.sdk.scrapper.exception.ScrapperException
 import io.github.wulkanowy.sdk.scrapper.interceptor.AutoLoginInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.ErrorInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.HttpErrorInterceptor
+import io.github.wulkanowy.sdk.scrapper.interceptor.ModuleHeaders
 import io.github.wulkanowy.sdk.scrapper.interceptor.StudentCookieInterceptor
 import io.github.wulkanowy.sdk.scrapper.interceptor.UserAgentInterceptor
 import io.github.wulkanowy.sdk.scrapper.login.LoginHelper
@@ -31,6 +32,7 @@ import retrofit2.create
 import java.security.KeyStore
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit.SECONDS
+import java.util.concurrent.locks.ReentrantLock
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
@@ -50,6 +52,8 @@ internal class ServiceManager(
     private val diaryId: Int,
     private val kindergartenDiaryId: Int,
     private val schoolYear: Int,
+    loginLock: ReentrantLock,
+    headersByHost: MutableMap<String, ModuleHeaders>,
     emptyCookieJarIntercept: Boolean,
     androidVersion: String,
     buildTag: String,
@@ -100,6 +104,8 @@ internal class ServiceManager(
         HttpLoggingInterceptor().setLevel(logLevel) to true,
         ErrorInterceptor(cookieJarCabinet) to false,
         AutoLoginInterceptor(
+            loginLock = loginLock,
+            headersByHost = headersByHost,
             loginType = loginType,
             cookieJarCabinet = cookieJarCabinet,
             emptyCookieJarIntercept = emptyCookieJarIntercept,
