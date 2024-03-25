@@ -184,7 +184,7 @@ internal class ServiceManager(
 
             client.addInterceptor(
                 StudentCookieInterceptor(
-                    cookieJarCabinet = cookieJarCabinet,
+                    cookieStore = cookieJarCabinet.userCookieManager.cookieStore,
                     schema = schema,
                     host = host,
                     domainSuffix = domainSuffix,

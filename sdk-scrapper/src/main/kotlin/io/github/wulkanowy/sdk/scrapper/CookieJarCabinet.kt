@@ -3,7 +3,6 @@ package io.github.wulkanowy.sdk.scrapper
 import java.net.CookieManager
 import java.net.CookiePolicy
 import java.net.CookieStore
-import java.net.HttpCookie
 import java.net.URI
 
 internal class CookieJarCabinet {
@@ -45,10 +44,6 @@ internal class CookieJarCabinet {
 
     fun onLoginServiceError() {
         clearUserCookieStore()
-    }
-
-    fun addStudentCookie(uri: URI, cookie: HttpCookie) {
-        userCookieManager.cookieStore.add(uri, cookie)
     }
 
     fun setAdditionalCookieManager(cookieManager: CookieManager) {
