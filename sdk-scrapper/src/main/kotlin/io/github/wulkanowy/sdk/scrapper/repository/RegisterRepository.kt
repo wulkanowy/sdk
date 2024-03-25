@@ -78,7 +78,7 @@ internal class RegisterRepository(
         return RegisterUser(
             email = emailAddress.ifBlank { email },
             login = getNormalizedLogin(login, emailAddress).ifBlank { email },
-            baseUrl = url.generate(UrlGenerator.Site.BASE),
+            baseUrl = url.getReferenceUrl(),
             loginType = symbolLoginType,
             symbols = getRegisterSymbols(
                 symbols = symbols,
